@@ -6,7 +6,7 @@ import {
     type Action,
     dataContext,
     dataDispatchContext,
-} from './components/context/data';
+} from './context/data';
 import './assets/normalize.css';
 import './App.scss';
 

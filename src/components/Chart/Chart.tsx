@@ -9,7 +9,7 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { useContext, useEffect, useState } from 'react';
-import { dataContext } from '../context/data';
+import { dataContext } from '../../context/data';
 import styles from './style.module.scss';
 
 ChartJS.register(

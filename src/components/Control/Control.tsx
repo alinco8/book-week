@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { dataContext, dataDispatchContext } from 'src/components/context/data';
+import { dataContext, dataDispatchContext } from '@/context/data';
 import styles from './style.module.scss';
 
 export const Control = () => {
