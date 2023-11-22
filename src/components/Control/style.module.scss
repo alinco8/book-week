@@ -1,0 +1,20 @@
+.control {
+    position: absolute;
+    background: white;
+    border: 1px solid gray;
+
+    table {
+        user-select: none;
+
+        tr {
+            td:nth-child(2) {
+                padding: 4px;
+            }
+
+            button {
+                width: 30px;
+                height: 30px;
+            }
+        }
+    }
+}
