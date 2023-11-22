@@ -17,6 +17,9 @@ export const Control = () => {
         fetch(import.meta.env.VITE_SERVER_URL, {
             method: 'post',
             body: JSON.stringify({ [hr]: num }),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
         });
     };
 
