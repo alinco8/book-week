@@ -1,5 +1,5 @@
 node_modules
 src-server
+dist
 .clasp.json
 pnpm-lock.yaml
-dist
