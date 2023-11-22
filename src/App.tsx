@@ -15,7 +15,7 @@ export const App = () => {
     const sync = async () => {
         dispatch({
             type: 'init',
-            state: await (await fetch('http://localhost:3000')).json(),
+            state: await (await fetch(import.meta.env.SERVER_URL)).json(),
         });
     };
 

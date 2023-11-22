@@ -14,7 +14,7 @@ export const Control = () => {
             key: hr,
             value: data[hr] + num,
         });
-        fetch('http://localhost:3000', {
+        fetch(import.meta.env.SERVER_URL, {
             method: 'post',
             body: JSON.stringify({ [hr]: num }),
         });
