@@ -26,7 +26,7 @@ export const App = () => {
     };
 
     useEffect(() => {
-        const id = setInterval(sync, 5000);
+        const id = setInterval(sync, 3000);
         sync();
 
         return () => {
