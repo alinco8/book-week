@@ -9,6 +9,7 @@ export default defineConfig({
     server: {
         cors: false,
     },
+    base: '/book-week/',
     css: {
         postcss: {
             plugins: [autoPrefixer],
