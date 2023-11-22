@@ -14,7 +14,7 @@ export const Control = () => {
             key: hr,
             value: data[hr] + num,
         });
-        fetch(import.meta.env.SERVER_URL, {
+        fetch(import.meta.env.VITE_SERVER_URL, {
             method: 'post',
             body: JSON.stringify({ [hr]: num }),
         });

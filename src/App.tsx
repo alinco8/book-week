@@ -15,7 +15,13 @@ export const App = () => {
     const sync = async () => {
         dispatch({
             type: 'init',
-            state: await (await fetch(import.meta.env.SERVER_URL)).json(),
+            state: await (
+                await fetch(import.meta.env.VITE_SERVER_URL, {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                })
+            ).json(),
         });
     };
 
