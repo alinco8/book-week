@@ -8,7 +8,7 @@
         "dev:vite": "vite",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",
-        "start": "ts-node --esm ./src/database/server.ts"
+        "start": "npx ts-node --esm ./src/database/server.ts"
     },
     "dependencies": {
         "react": "^18.2.0",
