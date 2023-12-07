@@ -9,7 +9,7 @@ const col = db.collection('main');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/:key', async (req, res) => {
+app.get<'/:key'>('/:key', async (req, res) => {
     const key = req.params.key;
     const item = await col.get(key);
 

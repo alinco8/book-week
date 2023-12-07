@@ -1,23 +1,22 @@
 {
     "type": "module",
-    "name": "library-ranking",
+    "name": "book-week",
     "version": "0.0.0",
     "scripts": {
-        "build": "tsc -p ./tsconfig.server.json",
         "build:client": "tsc && vite build",
         "dev": "run-p dev:*",
         "dev:scss": "typed-scss-modules src/**/*.module.scss -w",
         "dev:vite": "vite",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",
-        "start": "node ./dist-server/server.js"
+        "start": "ts-node --esm ./src/database/server.ts"
     },
     "dependencies": {
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0"
+        "@cyclic.sh/dynamodb": "^0.0.33",
+        "chalk": "^5.3.0",
+        "express": "^4.18.2"
     },
     "devDependencies": {
-        "@cyclic.sh/dynamodb": "^0.0.33",
         "@types/express": "^4.17.21",
         "@types/google-apps-script": "^1.0.78",
         "@types/node": "^20.9.4",
@@ -27,7 +26,6 @@
         "@typescript-eslint/parser": "^6.11.0",
         "@vitejs/plugin-react-swc": "^3.5.0",
         "autoprefixer": "^10.4.16",
-        "chalk": "^5.3.0",
         "chart.js": "^4.4.0",
         "eslint": "^8.54.0",
         "eslint-config-prettier": "^9.0.0",
@@ -35,12 +33,13 @@
         "eslint-plugin-react": "^7.33.2",
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-react-refresh": "^0.4.4",
-        "express": "^4.18.1",
         "husky": "^8.0.3",
         "lint-staged": "^15.1.0",
         "npm-run-all": "^4.1.5",
         "prettier": "^3.1.0",
+        "react": "^18.2.0",
         "react-chartjs-2": "^5.2.0",
+        "react-dom": "^18.2.0",
         "sass": "^1.69.5",
         "stylelint": "^15.11.0",
         "stylelint-config-recess-order": "^4.4.0",
@@ -65,6 +64,5 @@
         "*.{scss,css}": [
             "stylelint"
         ]
-    },
-    "private": true
+    }
 }
