@@ -18,8 +18,6 @@ app.use((req, res, next) => {
     } else {
         next();
     }
-
-    next();
 });
 
 app.get('/', async (_req, res) => {
