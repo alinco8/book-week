@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ES6",
+        "strict": true,
+
+        "outDir": "./dist-server"
+    },
+    "include": ["src/database"]
+}

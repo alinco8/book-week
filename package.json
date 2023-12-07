@@ -1,14 +1,16 @@
 {
+    "type": "module",
     "name": "library-ranking",
     "version": "0.0.0",
     "scripts": {
+        "build": "tsc -p ./tsconfig.server.json",
         "build:client": "tsc && vite build",
         "dev": "run-p dev:*",
         "dev:scss": "typed-scss-modules src/**/*.module.scss -w",
         "dev:vite": "vite",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",
-        "start": "npx ts-node --esm ./src/database/server.ts"
+        "start": "node ./dist-server/server.js"
     },
     "dependencies": {
         "react": "^18.2.0",
@@ -64,6 +66,5 @@
             "stylelint"
         ]
     },
-    "private": true,
-    "type": "module"
+    "private": true
 }
