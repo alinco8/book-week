@@ -2,7 +2,7 @@
     "name": "library-ranking",
     "version": "0.0.0",
     "scripts": {
-        "build": "tsc && vite build",
+        "build:client": "tsc && vite build",
         "dev": "run-p dev:*",
         "dev:scss": "typed-scss-modules src/**/*.module.scss -w",
         "dev:vite": "vite",
