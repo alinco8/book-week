@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
 
     if ('OPTIONS' === req.method) {
@@ -28,6 +28,18 @@ app.get('/', async (_req, res) => {
 app.get('/:key', async (req, res) => {
     const key = req.params.key;
     const item = await col.get(key);
+
+    res.json(item);
+});
+app.patch('/:key', async (req, res) => {
+    const key = req.params.key;
+    const item = await col.set(
+        key,
+        {
+            value: (await col.get(key)) + req.body.value,
+        },
+        {},
+    );
 
     res.json(item);
 });
