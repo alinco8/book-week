@@ -9,7 +9,7 @@ extends:
   - plugin:react/all
 ignorePatterns:
   - dist
-  - ".eslintrc.cjs"
+  - .eslintrc.cjs
 parser: "@typescript-eslint/parser"
 plugins:
   - react-refresh

@@ -1,21 +1,22 @@
 {
     "name": "library-ranking",
-    "private": true,
     "version": "0.0.0",
-    "type": "module",
     "scripts": {
-        "dev": "run-p dev:*",
-        "dev:vite": "vite",
-        "dev:scss": "typed-scss-modules src/**/*.module.scss -w",
         "build": "tsc && vite build",
+        "dev": "run-p dev:*",
+        "dev:scss": "typed-scss-modules src/**/*.module.scss -w",
+        "dev:vite": "vite",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "start": "ts-node --esm ./src/database/server.ts"
     },
     "dependencies": {
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
+        "@cyclic.sh/dynamodb": "^0.0.33",
+        "@types/express": "^4.17.21",
         "@types/google-apps-script": "^1.0.78",
         "@types/node": "^20.9.4",
         "@types/react": "^18.2.37",
@@ -24,6 +25,7 @@
         "@typescript-eslint/parser": "^6.11.0",
         "@vitejs/plugin-react-swc": "^3.5.0",
         "autoprefixer": "^10.4.16",
+        "chalk": "^5.3.0",
         "chart.js": "^4.4.0",
         "eslint": "^8.54.0",
         "eslint-config-prettier": "^9.0.0",
@@ -31,6 +33,7 @@
         "eslint-plugin-react": "^7.33.2",
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-react-refresh": "^0.4.4",
+        "express": "^4.18.1",
         "husky": "^8.0.3",
         "lint-staged": "^15.1.0",
         "npm-run-all": "^4.1.5",
@@ -41,10 +44,16 @@
         "stylelint-config-recess-order": "^4.4.0",
         "stylelint-config-recommended": "^13.0.0",
         "stylelint-config-recommended-scss": "^13.1.0",
+        "ts-node": "^10.9.1",
         "typed-scss-modules": "^7.1.4",
         "typescript": "^5.2.2",
         "vite": "^5.0.0",
         "vite-tsconfig-paths": "^4.2.1"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
     },
     "lint-staged": {
         "*.{ts,tsx}": [
@@ -55,9 +64,6 @@
             "stylelint"
         ]
     },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged"
-        }
-    }
+    "private": true,
+    "type": "module"
 }
