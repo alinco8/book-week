@@ -43,10 +43,11 @@ import chalk from 'chalk';
     });
 
     io.on('connection', (socket) => {
-        socket.emit('all');
+        socket.emit('all', record);
 
         socket.on('change', async (key, value) => {
-            const item = await col.list();
+            const v = (record[key] += value);
+            io.emit('changed', key, v);
         });
     });
 
