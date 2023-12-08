@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { dataContext, dataDispatchContext } from '@/context/data';
 import styles from './style.module.scss';
+import database from '@/lib/database';
 
 export const Control = () => {
     const data = useContext(dataContext);
@@ -14,13 +15,10 @@ export const Control = () => {
             key: hr,
             value: data[hr] + num,
         });
-        fetch(import.meta.env.VITE_SERVER_URL, {
-            method: 'post',
-            body: JSON.stringify({ [hr]: num }),
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-        });
+
+        console.log('change');
+
+        database.patch(hr, num);
     };
 
     return (

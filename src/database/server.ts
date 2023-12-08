@@ -1,66 +1,60 @@
 import express from 'express';
+import socketIO from 'socket.io';
 import db from '@cyclic.sh/dynamodb';
+import http from 'http';
 import chalk from 'chalk';
 
-const app = express();
-const port = process.env.PORT || 3000;
-const col = db.collection('main');
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-
-    if ('OPTIONS' === req.method) {
-        res.send(200);
-    } else {
-        next();
-    }
-});
-
-app.get('/', async (_req, res) => {
-    const item = await col.list();
-
-    res.json(item);
-});
-app.get('/:key', async (req, res) => {
-    const key = req.params.key;
-    const item = await col.get(key);
-
-    res.json(item);
-});
-app.patch('/:key', async (req, res) => {
-    const key = req.params.key;
-    const item = await col.set(
-        key,
+(async () => {
+    const app = express();
+    const server = new http.Server(app);
+    const io = new socketIO.Server<
         {
-            value: (await col.get(key)) + req.body.value,
+            change(key: string, value: number): void;
         },
-        {},
+        {
+            all(db: Record<string, number>): void;
+            changed(key: string, value: number): void;
+        },
+        { ping(): void }
+    >(server);
+    const port = process.env.PORT || 3000;
+    const col = db.collection('main');
+    const record: Record<string, number> = Object.fromEntries(
+        await Promise.all(
+            (await col.list()).results.map(async (result) => [
+                result.key,
+                (await col.get(result.key)).props.value,
+            ]),
+        ),
     );
 
-    res.json(item);
-});
-app.post('/:key', async (req, res) => {
-    const key = req.params.key;
-    const item = await col.set(key, req.body, {});
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
+    app.use((req, res, next) => {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
+        res.header('Access-Control-Allow-Headers', 'Content-Type');
 
-    res.json(item);
-});
+        if ('OPTIONS' === req.method) {
+            res.send(200);
+        } else {
+            next();
+        }
+    });
 
-app.delete('/:key', async (req, res) => {
-    const key = req.params.key;
-    const item = await col.delete(key, req.body, {});
+    io.on('connection', (socket) => {
+        socket.emit('all');
 
-    res.json(item);
-});
+        socket.on('change', async (key, value) => {
+            const item = await col.list();
+        });
+    });
 
-app.use('*', (_req, res) => {
-    res.json({ msg: 'book-week database' });
-});
+    app.use('*', (_req, res) => {
+        res.json({ msg: 'book-week database' });
+    });
 
-app.listen(port, () => {
-    console.log(chalk.hex('#ffff00')(`Server running on port:${port}...`));
-});
+    app.listen(port, () => {
+        console.log(chalk.hex('#ffff00')(`Server running on port:${port}...`));
+    });
+})();

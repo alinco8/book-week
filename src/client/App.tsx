@@ -7,21 +7,24 @@ import {
     dataContext,
     dataDispatchContext,
 } from './context/data';
+import database from '@/lib/database';
 import './assets/normalize.css';
 import './App.scss';
 
 export const App = () => {
     const [data, dispatch] = useReducer(dataReducer, null);
+
     const sync = async () => {
         dispatch({
             type: 'init',
-            state: await (
-                await fetch(import.meta.env.VITE_SERVER_URL, {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                })
-            ).json(),
+            state: Object.fromEntries(
+                await Promise.all(
+                    (await database.get()).results.map(async (result) => [
+                        result.key,
+                        (await database.get(result.key))?.props.value,
+                    ]),
+                ),
+            ),
         });
     };
 
