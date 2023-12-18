@@ -3,7 +3,7 @@
     "name": "book-week",
     "version": "0.0.0",
     "scripts": {
-        "build:client": "tsc && vite build",
+        "build": "tsc && vite build",
         "dev": "run-p dev:*",
         "dev:scss": "typed-scss-modules src/**/*.module.scss -w",
         "dev:vite": "vite",
