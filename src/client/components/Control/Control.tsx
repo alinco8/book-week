@@ -1,11 +1,12 @@
 import { useContext } from 'react';
 import { dataContext, dataDispatchContext } from '@/context/data';
+import { socketContext } from '@/context/socket';
 import styles from './style.module.scss';
-import database from '@/lib/database';
 
 export const Control = () => {
     const data = useContext(dataContext);
     const dispatch = useContext(dataDispatchContext);
+    const socket = useContext(socketContext);
 
     const change = async (hr: string, num: 1 | -1) => {
         if (!dispatch || !data) return;
@@ -18,7 +19,7 @@ export const Control = () => {
 
         console.log('change');
 
-        database.patch(hr, num);
+        socket.emit('change', hr, num);
     };
 
     return (

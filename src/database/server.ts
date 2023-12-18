@@ -1,61 +1,56 @@
 import express from 'express';
-import socketIO from 'socket.io';
-import db from '@cyclic.sh/dynamodb';
-import http from 'http';
+import * as socketIO from 'socket.io';
+import { Deta } from 'deta';
 import chalk from 'chalk';
+import http from 'http';
 
-(async () => {
-    const app = express();
-    const server = new http.Server(app);
-    const io = new socketIO.Server<
-        {
-            change(key: string, value: number): void;
-        },
-        {
-            all(db: Record<string, number>): void;
-            changed(key: string, value: number): void;
-        },
-        { ping(): void }
-    >(server);
-    const port = process.env.PORT || 3000;
-    const col = db.collection('main');
-    const record: Record<string, number> = Object.fromEntries(
-        await Promise.all(
-            (await col.list()).results.map(async (result) => [
-                result.key,
-                (await col.get(result.key)).props.value,
-            ]),
-        ),
-    );
+const deta = Deta();
+const db = deta.Base('simple_db');
+const app = express();
+const server = new http.Server(app);
+const io = new socketIO.Server<
+    SocketEvents.Client2Server,
+    SocketEvents.Server2Client,
+    SocketEvents.Server
+>(server, {
+    cors: {
+        origin: '*',
+    },
+});
+const port = process.env.PORT || 3000;
+const record = (await db.fetch({ key: 'homeroom' })).items[0] as Record<
+    string,
+    number
+>;
 
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
-    app.use((req, res, next) => {
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
-        res.header('Access-Control-Allow-Headers', 'Content-Type');
+delete record.key;
 
-        if ('OPTIONS' === req.method) {
-            res.send(200);
-        } else {
-            next();
-        }
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    if ('OPTIONS' === req.method) {
+        res.send(200);
+    } else {
+        next();
+    }
+});
+
+io.on('connection', (socket) => {
+    socket.on('change', async (key, value) => {
+        const newValue = (record[key] += value);
+
+        io.emit('changed', key, newValue);
+
+        db.update({ [key]: record[key] }, 'homeroom');
     });
 
-    io.on('connection', (socket) => {
-        socket.emit('all', record);
+    socket.on('init', () => socket.emit('all', record));
+});
 
-        socket.on('change', async (key, value) => {
-            const v = (record[key] += value);
-            io.emit('changed', key, v);
-        });
-    });
-
-    app.use('*', (_req, res) => {
-        res.json({ msg: 'book-week database' });
-    });
-
-    app.listen(port, () => {
-        console.log(chalk.hex('#ffff00')(`Server running on port:${port}...`));
-    });
-})();
+server.listen(port, () => {
+    console.log(chalk.hex('#ffff00')(`Server running on port:${port}...`));
+});

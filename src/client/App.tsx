@@ -1,49 +1,52 @@
-import { useEffect, useReducer } from 'react';
-import { Chart } from './components/Chart';
-import { Control } from './components/Control';
+import { useContext, useEffect, useReducer } from 'react';
 import {
-    type State,
-    type Action,
+    State,
+    Action,
     dataContext,
     dataDispatchContext,
-} from './context/data';
-import database from '@/lib/database';
+} from '@/context/data';
+import { socketContext } from '@/context/socket';
+import { Chart } from './components/Chart';
+import { Control } from './components/Control';
 import './assets/normalize.css';
 import './App.scss';
 
 export const App = () => {
     const [data, dispatch] = useReducer(dataReducer, null);
-
-    const sync = async () => {
-        dispatch({
-            type: 'init',
-            state: Object.fromEntries(
-                await Promise.all(
-                    (await database.get()).results.map(async (result) => [
-                        result.key,
-                        (await database.get(result.key))?.props.value,
-                    ]),
-                ),
-            ),
-        });
-    };
+    const socket = useContext(socketContext);
 
     useEffect(() => {
-        const id = setInterval(sync, 5000);
-        sync();
+        socket
+            .on('all', (db) => {
+                dispatch({
+                    type: 'init',
+                    state: db,
+                });
+            })
+            .on('changed', (key, value) => {
+                data && (data[key] = value);
+                dispatch({
+                    type: 'set',
+                    key,
+                    value,
+                });
+            })
+            .emit('init');
 
         return () => {
-            clearInterval(id);
+            socket?.off('all').off('changed');
         };
     }, []);
 
     return (
-        <dataContext.Provider value={data}>
-            <dataDispatchContext.Provider value={dispatch}>
-                <Control />
-                <Chart />
-            </dataDispatchContext.Provider>
-        </dataContext.Provider>
+        <socketContext.Provider value={socket}>
+            <dataContext.Provider value={data}>
+                <dataDispatchContext.Provider value={dispatch}>
+                    <Control />
+                    <Chart />
+                </dataDispatchContext.Provider>
+            </dataContext.Provider>
+        </socketContext.Provider>
     );
 };
 

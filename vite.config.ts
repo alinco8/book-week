@@ -4,7 +4,6 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import eslint from 'vite-plugin-eslint';
 import autoPrefixer from 'autoprefixer';
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
     process.env = { ...process.env, ...loadEnv(mode, './') };
     return {
