@@ -51,6 +51,10 @@ io.on('connection', (socket) => {
     socket.on('init', () => socket.emit('all', record));
 });
 
+app.use('*', (req, res) => {
+    res.send('404');
+});
+
 server.listen(port, () => {
     console.log(chalk.hex('#ffff00')(`Server running on port:${port}...`));
 });
