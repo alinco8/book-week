@@ -1,11 +1,8 @@
 import express from 'express';
 import * as socketIO from 'socket.io';
-import { Deta } from 'deta';
 import chalk from 'chalk';
 import http from 'http';
 
-const deta = Deta();
-const db = deta.Base('simple_db');
 const app = express();
 const server = new http.Server(app);
 const io = new socketIO.Server<
@@ -18,12 +15,26 @@ const io = new socketIO.Server<
     },
 });
 const port = process.env.PORT || 3000;
-const record = (await db.fetch({ key: 'homeroom' })).items[0] as Record<
-    string,
-    number
->;
-
-delete record.key;
+const database: Record<string, number> = {
+    '1-1': 0,
+    '1-2': 0,
+    '1-3': 0,
+    '1-4': 0,
+    '1-5': 0,
+    '1-6': 0,
+    '2-1': 0,
+    '2-2': 0,
+    '2-3': 0,
+    '2-4': 0,
+    '2-5': 0,
+    '2-6': 0,
+    '3-1': 0,
+    '3-2': 0,
+    '3-3': 0,
+    '3-4': 0,
+    '3-5': 0,
+    '3-6': 0,
+};
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -41,14 +52,12 @@ app.use((req, res, next) => {
 
 io.on('connection', (socket) => {
     socket.on('change', async (key, value) => {
-        const newValue = (record[key] += value);
+        const newValue = (database[key] += value);
 
         io.emit('changed', key, newValue);
-
-        db.update({ [key]: record[key] }, 'homeroom');
     });
 
-    socket.on('init', () => socket.emit('all', record));
+    socket.on('init', () => socket.emit('all', database));
 });
 
 app.use('*', (req, res) => {
