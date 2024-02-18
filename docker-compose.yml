@@ -1,0 +1,14 @@
+version: '3'
+services:
+    server:
+        build: ./
+        container_name: server
+        ports:
+            - 3000:3000
+        volumes:
+            - ./:/root/usr
+            - node_modules:/root/usr/node_modules
+        tty: true
+        init: true
+volumes:
+    node_modules:
