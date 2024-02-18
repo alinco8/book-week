@@ -11,6 +11,7 @@ import { Bar } from 'react-chartjs-2';
 import { useContext, useEffect, useState } from 'react';
 import { dataContext } from '../../context/data';
 import styles from './style.module.scss';
+import { Control } from '@/components/Control';
 
 ChartJS.register(
     CategoryScale,
@@ -35,10 +36,13 @@ export const Chart = () => {
         };
     });
 
+    console.log(size.w, size.h);
+
     return (
         <div className={styles.chart}>
             {data ? (
                 <>
+                    <Control />
                     <div style={{ width: size.w - 300, height: size.h }}>
                         <Bar
                             width={size.w - 300}
@@ -52,7 +56,10 @@ export const Chart = () => {
                                     },
                                 ],
                             }}
-                            options={{ responsive: true }}
+                            options={{
+                                responsive: true,
+                                maintainAspectRatio: false,
+                            }}
                         />
                     </div>
                     <table className={styles.ranking}>

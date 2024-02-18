@@ -26,8 +26,8 @@ export const Control = () => {
         new URLSearchParams(location.search).has('c') &&
         data &&
         dispatch && (
-            <div className={styles.control}>
-                <table>
+            <div className={styles.control} style={{ width: 150 }}>
+                <table style={{ width: '100%' }}>
                     <tbody>
                         {Object.entries(data)
                             .sort(([hr2], [hr]) => (hr < hr2 ? 1 : -1))

@@ -7,7 +7,6 @@ import {
 } from '@/context/data';
 import { socketContext } from '@/context/socket';
 import { Chart } from './components/Chart';
-import { Control } from './components/Control';
 import './assets/normalize.css';
 import './App.scss';
 
@@ -42,7 +41,6 @@ export const App = () => {
         <socketContext.Provider value={socket}>
             <dataContext.Provider value={data}>
                 <dataDispatchContext.Provider value={dispatch}>
-                    <Control />
                     <Chart />
                 </dataDispatchContext.Provider>
             </dataContext.Provider>
